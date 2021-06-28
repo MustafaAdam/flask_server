@@ -1,3 +1,4 @@
+from resources.clear_hisab import ClearSubscriberHisab
 from resources.reverse_payment import ReversePayment
 from resources.add_payment import AddPayment
 from resources.add_hisab import AddHisab
@@ -18,7 +19,7 @@ api.add_resource(SubscriberHistory, "/hisabHistory/<baqala_id>/<subscriber_mobil
 api.add_resource(AddHisab, "/addHisab/<baqala_id>/<subscriber_mobile>")
 api.add_resource(AddPayment, "/addPayment/<baqala_id>/<subscriber_mobile>")
 api.add_resource(ReversePayment, "/reversePayment/<baqala_id>/<subscriber_mobile>")
-
+api.add_resource(ClearSubscriberHisab, "/clearHisab/<baqala_id>/<subscriber_mobile>")
 
 if __name__ == "__main__":
     app.run(debug=True)
