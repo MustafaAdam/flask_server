@@ -11,7 +11,7 @@ class UserLanding(Resource):
         if not user_ref:
             return {"message": f"user with ID {user_id} was not found"}, 400
 
-        user_document = user_ref[0].to_dict()
+        user_document = user_ref.to_dict()
 
         if user_document.get("userType") == "baqala":
             return user_document, 200
