@@ -1,5 +1,5 @@
 from typing import List
-from utils import get_hisabs
+from utils.utils import get_hisabs
 from flask_restful import Resource
 from database.firestore import db, firestore
 
@@ -42,4 +42,5 @@ class SubscriberHistory(Resource):
             return {
                 "message": "This user does not have a hisab history"
             }, 204  # No content
+
         return hisabs, 200

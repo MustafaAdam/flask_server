@@ -2,9 +2,10 @@ from typing import Dict, List
 from flask import json
 from flask_restful import Resource, request
 from database.firestore import db, firestore
+from utils.utils import get_proper_timestamp
 
 
-class Baqala(Resource):
+class BaqalaSubscriber(Resource):
     def get(self, baqala_id):
         """
         "route": /<baqala_id>
@@ -16,18 +17,24 @@ class Baqala(Resource):
         """
         result: List[Dict] = []
         baqala_ref = db.collection(baqala_id)
-        subscribers: list[firestore.DocumentSnapshot] = baqala_ref.get()
+        subscribers: list[firestore.DocumentSnapshot] = baqala_ref.order_by(
+            "total_hisab", direction=firestore.Query.DESCENDING
+        ).get()
+
+        print(subscribers)
 
         if not subscribers:
             return {
-                "message": f"subscriber with this ID number {baqala_id} does nto exist"
+                "message": f"baqala with this ID number {baqala_id} does nto exist"
             }, 404  # not found
 
         for subscriber in subscribers:
+            xx = subscriber.to_dict()
+
             name: str = subscriber.get("name")
             mobile: str = subscriber.get("mobile")
             total_hisab: float = subscriber.get("total_hisab")
-            last_hisab: float = subscriber.get("last_hisab")
+            last_hisab: firestore.SERVER_TIMESTAMP = subscriber.get("last_hisab")
             last_payment: firestore.SERVER_TIMESTAMP = subscriber.get("last_payment")
             created_at: firestore.SERVER_TIMESTAMP = subscriber.get("created_at")
 
@@ -35,13 +42,10 @@ class Baqala(Resource):
                 {
                     "name": name,
                     "mobile": mobile,
-                    "total_hisab": json.loads(json.dumps(total_hisab)),
-                    "last_hisab": json.loads(json.dumps(last_hisab)),
-                    "last_payment": json.loads(json.dumps(last_payment)),
-                    "created_at": json.loads(json.dumps(created_at)),
-                    # The timestamps are of type DateTimeWithNanoSeconds, which is not JSON Serializable.
-                    # Without json.dumps, the timestamp will raise a TypeError
-                    # The json.loads is to skip backslashes added beause of json.dumps()
+                    "total_hisab": total_hisab,
+                    "last_hisab": get_proper_timestamp(last_hisab),
+                    "last_payment": get_proper_timestamp(last_payment),
+                    "created_at": get_proper_timestamp(created_at),
                 }
             )
 
@@ -100,7 +104,7 @@ class Baqala(Resource):
 
         if subscriber_document_query:
             return {
-                "message": f"Either baqala id is wrong, or a subscriber with the mobile number {subscriber_mobile} does not exist"
+                "message": f"duplicate mobile number"
             }, 400  # bad request: duplicate mobile number
 
         request_data["created_at"] = timestamp
@@ -116,6 +120,7 @@ class Baqala(Resource):
         wb.set(
             new_subscriber_document.collection("hisabHistory").document(),
             {
+                "type": "hisab",
                 "before": 0.0,
                 "amount": request_data["total_hisab"],
                 "after": request_data["total_hisab"],
