@@ -2,6 +2,7 @@ import datetime
 from typing import Dict, List
 from firebase_admin import firestore
 from time import strptime, strftime
+import json
 
 
 def get_hisabs(hisabs: List[firestore.DocumentSnapshot]) -> List[Dict]:
@@ -25,13 +26,14 @@ def get_hisabs(hisabs: List[firestore.DocumentSnapshot]) -> List[Dict]:
         d = {}
 
         timestamp = hisab_dict.get("timestamp")
-
         proper_timestamp: str = get_proper_timestamp(timestamp.astimezone())
 
+        timestamp = datetime.datetime.now()
         d.update(
             {
                 "hisab_type": hisab_dict.get("type", None),
-                "timestamp": proper_timestamp,
+                # "timestamp": proper_timestamp,
+                "timestamp": str(timestamp),
                 "amount": hisab_dict.get("amount", None),
                 "before": hisab_dict.get("before", None),
                 "after": hisab_dict.get("after", None),
@@ -65,6 +67,10 @@ def get_proper_timestamp(timestamp) -> str:
         return None
 
     date: datetime.date = timestamp.date()
+
+    print(timestamp.utcoffset())
+    # for x in dir(timestamp):
+    #     print(x)
 
     day = str(date.day)
     month = str(date.month)
