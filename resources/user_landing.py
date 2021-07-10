@@ -20,8 +20,10 @@ class UserLanding(Resource):
 
         if subscribed_to:
             user_baqala_document = db.collection("users").document(subscribed_to).get()
-            ab = {"user_document": user_document}
-            ab["subscribed_to" : user_baqala_document.to_dict()]
+            ab = {
+                "user_document": user_document,
+                "subscribed_to": user_baqala_document.to_dict(),
+            }
             return ab, 200
 
         return user_document, 200

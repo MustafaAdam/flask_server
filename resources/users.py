@@ -8,19 +8,20 @@ users_ref = db.collection("users")
 
 class Users(Resource):
     def get(self):
-        users = {"personalUsers": [], "baqalaUsers": []}
+        return [doc.to_dict() for doc in users_ref.get()]
 
-        for userDocument in users_ref.get():
-            userDict: Dict = userDocument.to_dict()
-            userType = userDict.get("userType")
-            if userType == "user":
-                user = PersonalUser(userInfo=userDict)
-                users["personalUsers"].append(user.__dict__)
-            else:
-                user = BaqalaUser(baqalaInfo=userDict)
-                users["baqalaUsers"].append(user.__dict__)
+        # for userDocument in users_ref.get():
+        #     userDict: Dict = userDocument.to_dict()
 
-        users["baqalaUsersCount"] = len(users["baqalaUsers"])
-        users["personalUsersCount"] = len(users["personalUsers"])
+        #     userType = userDict.get("userType")
+        #     if userType == "user":
+        #         user = PersonalUser(userInfo=userDict)
+        #         users["personalUsers"].append(user.__dict__)
+        #     else:
+        #         user = BaqalaUser(baqalaInfo=userDict)
+        #         users["baqalaUsers"].append(user.__dict__)
 
-        return {"users": users}
+        # users["baqalaUsersCount"] = len(users["baqalaUsers"])
+        # users["personalUsersCount"] = len(users["personalUsers"])
+
+        # return {"users": users}

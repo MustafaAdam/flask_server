@@ -25,7 +25,7 @@ class BaqalaSubscriber(Resource):
 
         if not subscribers:
             return {
-                "message": f"baqala with this ID number {baqala_id} does nto exist"
+                "message": f"baqala with this ID number {baqala_id} does not exist"
             }, 404  # not found
 
         for subscriber in subscribers:
