@@ -28,7 +28,6 @@ def get_hisabs(hisabs: List[firestore.DocumentSnapshot]) -> List[Dict]:
         timestamp = hisab_dict.get("timestamp")
         proper_timestamp: str = get_proper_timestamp(timestamp.astimezone())
 
-        timestamp = datetime.datetime.now()
         d.update(
             {
                 "hisab_type": hisab_dict.get("type", None),
