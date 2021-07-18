@@ -11,8 +11,8 @@ class UploadImage(Resource):
         baqala_id = request_data["baqalaID"]
         imageBytes = request_data["imageBytes"]
 
-        print(f"baqala ID: {baqala_id}")
-        print(f"Image bytes: {imageBytes}")
+        # print(f"baqala ID: {baqala_id}")
+        # print(f"Image bytes: {imageBytes}")
 
         bucket = storage.bucket("hisab-android2.appspot.com")
 
