@@ -9,7 +9,8 @@ class UploadImage(Resource):
     def post(self):
         request_data = request.get_json()
         baqala_id = request_data["baqalaID"]
-        imageBytes = request_data["imageBytes"]
+        # imageBytes = request_data["imageBytes"]
+        imageFile = request_data["imageFile"]
 
         # print(f"baqala ID: {baqala_id}")
         # print(f"Image bytes: {imageBytes}")
@@ -19,13 +20,13 @@ class UploadImage(Resource):
         # for a in dir(bucket):
         #     print(a)
 
-        blob = bucket.blob(f"{baqala_id}/{imageBytes}")
+        # blob = bucket.blob(f"{baqala_id}/{imageBytes}")
+        blob = bucket.blob(f"{baqala_id}/{imageFile}")
 
-        # print(blob._dict__)
         # for a in dir(blob):
         #     print(a)
-        upload = blob.upload_from_string(imageBytes)
-        print(upload)
+        # upload = blob.upload_from_file(imageBytes)
+        upload = blob.upload_from_file(imageFile)
 
         return {"message": "upload succesfull"}, 200
 
