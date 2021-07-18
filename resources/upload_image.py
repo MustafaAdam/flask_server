@@ -16,15 +16,18 @@ class UploadImage(Resource):
 
         bucket = storage.bucket("hisab-android2.appspot.com")
 
-        for a in dir(bucket):
-            print(a)
+        # for a in dir(bucket):
+        #     print(a)
 
-        blob = bucket.blob(imageBytes)
+        blob = bucket.blob(f"{baqala_id}/{imageBytes}")
+
         # print(blob._dict__)
         # for a in dir(blob):
         #     print(a)
         upload = blob.upload_from_string(imageBytes)
         print(upload)
+
+        return {"message": "upload succesfull"}, 200
 
         # ref = db.collection(baqala_id)
         # timestamp = firestore.SERVER_TIMESTAMP
