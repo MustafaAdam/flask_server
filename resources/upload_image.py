@@ -7,9 +7,9 @@ from firebase_admin import storage
 
 class UploadImage(Resource):
     def post(self):
-        request_data: Dict = request.get_json()
-        baqala_id = request_data.get("baqalaID")
-        imageBytes = request_data.get("imageBytes")
+        request_data = request.get_json()
+        baqala_id = request_data["baqalaID"]
+        imageBytes = request_data["imageBytes"]
 
         print(f"baqala ID: {baqala_id}")
         print(f"Image bytes: {imageBytes}")
