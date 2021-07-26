@@ -7,26 +7,29 @@ from firebase_admin import storage
 
 class UploadImage(Resource):
     def post(self):
+        """
+        request json:
+            "baqala_id": ID of the baqala making the upload
+            "images": Map of pairs of image title and image base64 data
+        """
         request_data = request.get_json()
-        baqala_id = request_data["baqalaID"]
-        # imageBytes = request_data["imageBytes"]
-        imageFile = request_data["imageFile"]
-
-        # print(f"baqala ID: {baqala_id}")
-        # print(f"Image bytes: {imageBytes}")
+        baqala_id: str = request_data["baqala_id"]
+        images: Dict[str, str] = request_data["images"]
 
         bucket = storage.bucket("hisab-android2.appspot.com")
 
-        # for a in dir(bucket):
-        #     print(a)
+        image_names = list(images.keys())
+        image_bytes = list(images.values())
 
-        # blob = bucket.blob(f"{baqala_id}/{imageBytes}")
-        blob = bucket.blob(f"{baqala_id}/{imageFile}")
+        for name, image in zip(image_names, image_bytes):
+            blob = bucket.blob(f"{baqala_id}/{name}")
+            blob.upload_from_string(image)
+
+        # blob = bucket.blob(f"{baqala_id}/{image_names[0]}")
+        # upload = blob.upload_from_string(image_bytes[0])
 
         # for a in dir(blob):
         #     print(a)
-        # upload = blob.upload_from_file(imageBytes)
-        upload = blob.upload_from_file(imageFile)
 
         return {"message": "upload succesfull"}, 200
 
